@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${sectionName}"></title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div th:insert="~{nav :: nav1}"></div>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2> <span th:text="${sectionName}"></span></h2>
+            <hr>
+
+            <h2> <span class="glyphicon glyphicon-list" aria-hidden="true"></span>发现</h2>
+            <hr>
+
+            <div class="media">
+                <div th:each="PublishDTO : ${pageInfoDTO.publishDTO}">
+                    <div class="media-left ">
+                        <a href="#">
+                            <img class="media-object img-rounded" th:src="${PublishDTO.user.avatarUrl}" >
+                        </a>
+
+                    </div>
+                    <div class="media-body">
+
+                        <h4 class="media-heading"><span th:text="${PublishDTO.title}"></span></h4>
+                        <span class="text-desc"><span th:text="${PublishDTO.commentCount}"></span> 个回复 ·<span th:text="${PublishDTO.viewCount}"></span> 次浏览 ·<span th:text="${#dates.format(PublishDTO.gmtCreate, 'yyyy-MM-dd')}"></span></span>
+                    </div>
+                </div>
+            </div>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <!--  第一页 -->
+                    <li th:if="${pageInfoDTO.head}">
+                        <a th:href="@{'/profile/'+${section}(pageNumber=1)}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;&lt;</span>
+                        </a>
+                    </li>
+                    <!--  前一页 -->
+                    <li th:if="${pageInfoDTO.pre}">
+
+                        <a th:href="@{'/profile/'+${section}(pageNumber=${pageInfoDTO.currentPage - 1})}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
+                        </a>
+                    </li>
+                    <!--  页码 -->
+
+                    <li th:each="page : ${pageInfoDTO.pages}" th:class="${pageInfoDTO.currentPage==page?'active':''}">
+                        <a th:href="@{'/profile/'+${section}(pageNumber=${page})}" th:text="${page}"></a>
+                    </li>
+
+
+                    <!--  后一页 -->
+                    <li th:if="${pageInfoDTO.next}">
+                        <a th:href="@{'/profile/'+${section}(pageNumber=${pageInfoDTO.currentPage + 1})}" aria-label="Previous">
+                            <span aria-hidden="true">&gt;</span>
+                        </a>
+                    </li>
+                    <!--  最后一页 -->
+                    <li th:if="${pageInfoDTO.tail}">
+                        <a th:href="@{'/profile/'+${section}(pageNumber=${pageInfoDTO.totalPage})}" aria-label="Next">
+                            <span aria-hidden="true">&gt;&gt;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+
+
+        </div>
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <div class="list-group">
+                <a href="/profile/publish"  th:class="${section=='publish'?'list-group-item active':'list-group-item'}" >我的发布<span class="badge">14</span></a>
+                <a href="/profile/reply"  th:class="${section=='reply'?'list-group-item active':'list-group-item'}">最新回复</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
